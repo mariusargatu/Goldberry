@@ -1,0 +1,9 @@
+# Placeholder until the backend stack is chosen; replace with that stack's
+# standard .gitignore.
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+build/
+*.log

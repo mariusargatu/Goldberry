@@ -1,0 +1,8 @@
+# Repository-wide: OS, editor and local tool output.
+# Each folder (frontend/, contracts/, backend/) has its own .gitignore.
+.DS_Store
+.idea/
+.vscode/
+*.local
+.playwright-mcp/
+node_modules/

@@ -1,0 +1,385 @@
+openapi: 3.1.0
+info:
+  title: Goldberry API
+  version: 0.1.0
+  description: >
+    Storefront API for the Goldberry demo shop. The frontend serves it from
+    (MSW) mocks for now; the backend (backend/ in this repository,
+    not built yet) will implement it.
+servers:
+  - url: /api
+tags:
+  - name: catalog
+  - name: checkout
+  - name: orders
+
+paths:
+  /products:
+    get:
+      tags: [catalog]
+      operationId: listProducts
+      summary: List products
+      responses:
+        '200':
+          description: Every product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductSummary'
+        default:
+          $ref: '#/components/responses/Problem'
+
+  /products/{productId}:
+    get:
+      tags: [catalog]
+      operationId: getProduct
+      summary: Get one product
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: The product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          $ref: '#/components/responses/Problem'
+        default:
+          $ref: '#/components/responses/Problem'
+
+  /checkout/quote:
+    post:
+      tags: [checkout]
+      operationId: createQuote
+      summary: Price a cart for a destination
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: The priced cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        default:
+          $ref: '#/components/responses/Problem'
+
+  /orders:
+    post:
+      tags: [orders]
+      operationId: createOrder
+      summary: Place an order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        default:
+          $ref: '#/components/responses/Problem'
+
+  /orders/{orderId}:
+    get:
+      tags: [orders]
+      operationId: getOrder
+      summary: Get a placed order
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: The order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          $ref: '#/components/responses/Problem'
+        default:
+          $ref: '#/components/responses/Problem'
+
+components:
+  parameters:
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ProductId'
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/OrderId'
+
+  responses:
+    Problem:
+      description: RFC 9457 Problem Details
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+
+  schemas:
+    ProductId:
+      type: string
+      pattern: '^[a-z0-9-]{1,64}$'
+
+    OrderId:
+      type: string
+      format: uuid
+
+    Money:
+      type: object
+      description: An amount in minor units (cents).
+      required: [amount, currency]
+      properties:
+        amount:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          enum: [USD]
+
+    ProductImage:
+      type: object
+      required: [url, alt]
+      properties:
+        url:
+          type: string
+        alt:
+          type: string
+
+    ProductSummary:
+      type: object
+      required: [id, name, artist, price, stock, editionSize, image]
+      properties:
+        id:
+          $ref: '#/components/schemas/ProductId'
+        name:
+          type: string
+        artist:
+          type: string
+        price:
+          $ref: '#/components/schemas/Money'
+        stock:
+          type: integer
+          minimum: 0
+          description: Units available. 0 means sold out.
+        editionSize:
+          type: integer
+          minimum: 1
+          description: Total units cast in this edition.
+        image:
+          $ref: '#/components/schemas/ProductImage'
+
+    Product:
+      allOf:
+        - $ref: '#/components/schemas/ProductSummary'
+        - type: object
+          required: [description, material, heightCm, gallery]
+          properties:
+            description:
+              type: string
+            material:
+              type: string
+            heightCm:
+              type: number
+            gallery:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductImage'
+
+    LineItemInput:
+      type: object
+      required: [productId, quantity]
+      properties:
+        productId:
+          $ref: '#/components/schemas/ProductId'
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 10
+
+    PostalCode:
+      type: string
+      description: US ZIP code, five digits.
+      pattern: '^\d{5}$'
+
+    QuoteRequest:
+      type: object
+      required: [items, postalCode]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LineItemInput'
+        postalCode:
+          $ref: '#/components/schemas/PostalCode'
+
+    ShippingMethod:
+      type: object
+      required: [id, label, etaDays, cost]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        etaDays:
+          type: integer
+        cost:
+          $ref: '#/components/schemas/Money'
+
+    Quote:
+      type: object
+      required: [subtotal, shipping, tax, total, shippingMethod]
+      properties:
+        subtotal:
+          $ref: '#/components/schemas/Money'
+        shipping:
+          $ref: '#/components/schemas/Money'
+        tax:
+          $ref: '#/components/schemas/Money'
+        total:
+          $ref: '#/components/schemas/Money'
+        shippingMethod:
+          $ref: '#/components/schemas/ShippingMethod'
+
+    ShippingAddress:
+      type: object
+      required: [fullName, line1, city, region, postalCode, country]
+      properties:
+        fullName:
+          type: string
+          minLength: 1
+          maxLength: 100
+        line1:
+          type: string
+          minLength: 1
+          maxLength: 120
+        line2:
+          type: string
+          maxLength: 120
+        city:
+          type: string
+          minLength: 1
+          maxLength: 80
+        region:
+          type: string
+          description: Two-letter US state code.
+          pattern: '^[A-Z]{2}$'
+        postalCode:
+          $ref: '#/components/schemas/PostalCode'
+        country:
+          type: string
+          enum: [US]
+
+    CreateOrderRequest:
+      type: object
+      required: [items, shippingAddress, paymentToken]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LineItemInput'
+        shippingAddress:
+          $ref: '#/components/schemas/ShippingAddress'
+        paymentToken:
+          type: string
+          description: Opaque token from the payment provider. Never a card number.
+          pattern: '^tok_[a-z0-9_]+$'
+
+    OrderLine:
+      type: object
+      required: [productId, name, quantity, unitPrice, image]
+      properties:
+        productId:
+          $ref: '#/components/schemas/ProductId'
+        name:
+          type: string
+        quantity:
+          type: integer
+        unitPrice:
+          $ref: '#/components/schemas/Money'
+        image:
+          $ref: '#/components/schemas/ProductImage'
+
+    Order:
+      type: object
+      required: [id, number, status, createdAt, lines, shippingAddress, pricing]
+      properties:
+        id:
+          $ref: '#/components/schemas/OrderId'
+        number:
+          type: string
+          description: Human-readable order number, e.g. GB-100042.
+        status:
+          type: string
+          enum: [confirmed]
+        createdAt:
+          type: string
+          format: date-time
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLine'
+        shippingAddress:
+          $ref: '#/components/schemas/ShippingAddress'
+        pricing:
+          $ref: '#/components/schemas/Quote'
+
+    FieldError:
+      type: object
+      required: [field, message]
+      properties:
+        field:
+          type: string
+          description: Dotted path into the request body, e.g. shippingAddress.postalCode.
+        message:
+          type: string
+
+    ProblemCode:
+      type: string
+      description: Machine-readable reason, stable across releases.
+      enum:
+        - not_found
+        - validation_failed
+        - internal_error
+
+    Problem:
+      type: object
+      description: RFC 9457 Problem Details with a `code` and optional field errors.
+      required: [type, title, status, code]
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          $ref: '#/components/schemas/ProblemCode'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldError'

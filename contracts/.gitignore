@@ -1,0 +1,4 @@
+# API contract tooling output (linters, bundled or rendered specs)
+node_modules/
+dist/
+*.bundled.yaml
