@@ -1,0 +1,95 @@
+/*
+ * Goldberry design tokens. Colours are Material 3 roles, trimmed to the ones
+ * the app uses. The text and spacing names are also listed in cn.ts so
+ * tailwind-merge can tell them apart from colours.
+ */
+@theme {
+  /* Fonts */
+  --font-sans:
+    'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  /* Color: primary */
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1c1b1b;
+  --color-on-primary-container: #858383;
+
+  /* Color: secondary (gold) */
+  --color-secondary: #7d5800;
+  --color-secondary-container: #fdc356;
+  --color-secondary-fixed: #ffdea9;
+  --color-on-secondary-fixed: #271900;
+
+  /* Color: surface */
+  --color-surface: #f9f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f0f3ff;
+  --color-surface-container: #e7eefe;
+  --color-surface-container-high: #e2e8f8;
+  --color-on-surface: #151c27;
+  --color-on-surface-variant: #444748;
+
+  /* Color: outline */
+  --color-outline: #747878;
+  --color-outline-variant: #c4c7c7;
+
+  /* Color: error */
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Type: size / line-height / letter-spacing / weight */
+  --text-headline-xl: 40px;
+  --text-headline-xl--line-height: 48px;
+  --text-headline-xl--letter-spacing: -0.03em;
+  --text-headline-xl--font-weight: 800;
+  --text-headline-xl-mobile: 30px;
+  --text-headline-xl-mobile--line-height: 36px;
+  --text-headline-xl-mobile--letter-spacing: -0.02em;
+  --text-headline-xl-mobile--font-weight: 800;
+  --text-headline-lg: 28px;
+  --text-headline-lg--line-height: 34px;
+  --text-headline-lg--letter-spacing: -0.02em;
+  --text-headline-lg--font-weight: 700;
+  --text-headline-md: 22px;
+  --text-headline-md--line-height: 28px;
+  --text-headline-md--letter-spacing: -0.015em;
+  --text-headline-md--font-weight: 600;
+  --text-headline-sm: 18px;
+  --text-headline-sm--line-height: 24px;
+  --text-headline-sm--font-weight: 600;
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+  --text-body-lg--font-weight: 400;
+  --text-body-md: 14px;
+  --text-body-md--line-height: 20px;
+  --text-body-md--font-weight: 400;
+  --text-body-sm: 12px;
+  --text-body-sm--line-height: 18px;
+  --text-body-sm--font-weight: 400;
+  --text-label-lg: 14px;
+  --text-label-lg--line-height: 18px;
+  --text-label-lg--letter-spacing: 0.01em;
+  --text-label-lg--font-weight: 600;
+  --text-label-md: 12px;
+  --text-label-md--line-height: 16px;
+  --text-label-md--letter-spacing: 0.02em;
+  --text-label-md--font-weight: 600;
+  --text-label-sm: 11px;
+  --text-label-sm--line-height: 14px;
+  --text-label-sm--letter-spacing: 0.03em;
+  --text-label-sm--font-weight: 500;
+  --text-code-sm: 11px;
+  --text-code-sm--line-height: 16px;
+  --text-code-sm--font-weight: 400;
+
+  /* Spacing */
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-mobile: 1rem;
+}

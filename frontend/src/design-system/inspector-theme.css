@@ -1,0 +1,341 @@
+@theme static {
+  --color-insp-bg: oklch(0.19 0.008 265);
+  --color-insp-bar: oklch(0.22 0.009 265);
+
+  --color-insp-raised: oklch(0.27 0.011 265);
+  --color-insp-border: oklch(0.3 0.011 265);
+
+  --color-insp-track: oklch(0.5 0.012 265);
+
+  --color-insp-frame: oklch(0.212 0.009 265);
+  --color-insp-frame-here: oklch(0.226 0.014 272);
+  --color-insp-frame-head: oklch(0.255 0.011 265);
+  --color-insp-node: oklch(0.245 0.011 265);
+
+  --color-insp-frame-head-here: oklch(0.29 0.035 275);
+  --color-insp-node-here: oklch(0.265 0.025 275);
+  --color-insp-state-here: oklch(0.3 0.06 275);
+  --color-insp-hairline: oklch(0.33 0.012 265);
+
+  --color-insp-hairline-soft: oklch(0.285 0.011 265);
+  --color-insp-hairline-strong: oklch(0.43 0.014 265);
+
+  --color-insp-pill: oklch(0.24 0.01 265);
+  --color-insp-pill-now: oklch(0.3 0.05 275);
+
+  --color-insp-grid: oklch(0.32 0.01 265);
+
+  --color-flow-edge: oklch(0.52 0.012 265);
+  --color-flow-edge-hover: oklch(0.64 0.012 265);
+
+  --shadow-insp-raised:
+    0 1px 2px oklch(0.1 0.01 265 / 0.45),
+    0 12px 32px -12px oklch(0.1 0.01 265 / 0.7);
+
+  --shadow-model:
+    inset 0 1px 0 oklch(1 0 0 / 0.05), 0 1px 2px oklch(0.1 0.01 265 / 0.35);
+  --shadow-model-here:
+    inset 0 1px 0 oklch(1 0 0 / 0.06), 0 0 0 3px oklch(0.76 0.12 275 / 0.18);
+
+  --color-insp-text: oklch(0.96 0.005 265);
+
+  --color-insp-soft: oklch(0.86 0.008 265);
+  --color-insp-muted: oklch(0.74 0.012 265);
+
+  --color-insp-dim: oklch(0.68 0.012 265);
+
+  --color-flow-visited: oklch(0.83 0.12 80);
+
+  --color-flow-now: oklch(0.76 0.12 275);
+
+  --color-insp-failure: oklch(0.72 0.14 25);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --radius-insp: 6px;
+  --radius-insp-sm: 4px;
+  --radius-insp-card: 11px;
+
+  --radius-model: 10px;
+
+  --text-insp-sm: 0.8rem;
+  --text-insp-sm--line-height: 1.125rem;
+  --text-insp-md: 1rem;
+  --text-insp-md--line-height: 1.5rem;
+  --text-model-title: 1.0625rem;
+  --text-model-title--line-height: 1.5rem;
+  --text-model-label: 0.9375rem;
+  --text-model-label--line-height: 1.25rem;
+  --text-model-note: 0.875rem;
+  --text-model-note--line-height: 1.25rem;
+}
+
+[data-theme='inspector'] {
+  --xy-background-color: transparent;
+
+  --xy-node-border: 0;
+
+  color-scheme: dark;
+  background-color: var(--color-insp-bg);
+  color: var(--color-insp-text);
+}
+
+[data-theme='inspector'] .react-flow__edgelabel-renderer {
+  z-index: 10;
+}
+
+[data-theme='inspector'] .react-flow__controls {
+  gap: 2px;
+  padding: 2px;
+}
+
+[data-theme='inspector'] .react-flow__controls-button {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-insp);
+  background-color: transparent;
+  color: var(--color-insp-muted);
+
+  cursor: default;
+  transition:
+    background-color 150ms var(--ease-out-expo),
+    color 150ms var(--ease-out-expo);
+}
+
+[data-theme='inspector'] .react-flow__controls-button:hover {
+  background-color: var(--color-insp-raised);
+  color: var(--color-insp-text);
+}
+
+[data-theme='inspector'] .react-flow__controls-button:active {
+  background-color: var(--color-insp-border);
+}
+
+[data-theme='inspector'] .react-flow__controls-button svg {
+  max-width: 14px;
+  max-height: 14px;
+}
+
+@media (pointer: coarse) {
+  [data-theme='inspector'] .react-flow__controls-button {
+    width: 44px;
+    height: 44px;
+  }
+
+  [data-theme='inspector'] .react-flow__controls-button svg {
+    max-width: 16px;
+    max-height: 16px;
+  }
+}
+
+@layer base {
+  [data-theme='inspector'] :focus-visible {
+    outline: 2px solid var(--color-insp-text);
+    outline-offset: 2px;
+  }
+}
+
+@utility flow-impossible-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--color-insp-muted) 6%, transparent) 0 5px,
+    transparent 5px 10px
+  );
+}
+
+@layer components {
+  .progress-track {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-insp-sm);
+    background-color: var(--color-insp-track);
+  }
+
+  .progress-fill {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-flow-visited);
+    transform-origin: left;
+    transition: transform 250ms var(--ease-out-expo);
+  }
+
+  .insp-tip {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    padding-bottom: 6px;
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 150ms var(--ease-out-expo),
+      visibility 0s linear 150ms;
+    cursor: default;
+  }
+
+  @media (hover: hover) {
+    .insp-tip-anchor:hover > .insp-tip {
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 400ms;
+    }
+  }
+
+  .insp-tip-anchor:focus-visible > .insp-tip {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+  }
+
+  .insp-tip-anchor[data-tip='hidden'] > .insp-tip {
+    visibility: hidden;
+    opacity: 0;
+    transition: none;
+  }
+
+  .progress-tip {
+    right: auto;
+    left: clamp(5.5rem, var(--fill-at), 100% - 5.5rem);
+    transform: translateX(-50%);
+  }
+
+  .swap-in {
+    animation: swap-in 200ms var(--ease-out-expo) backwards;
+  }
+}
+
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (width < 40rem) {
+  .page-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    padding-right: 1.5rem;
+    mask-image: linear-gradient(
+      to right,
+      black calc(100% - 1.5rem),
+      transparent
+    );
+  }
+
+  .page-row[data-scrolled] {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 1.5rem,
+      black calc(100% - 1.5rem),
+      transparent
+    );
+  }
+}
+
+[data-pace='fast'] .progress-fill {
+  transition: none;
+}
+
+[data-pace='fast'] .swap-in {
+  animation: none;
+}
+
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0
+      color-mix(in oklch, var(--color-flow-now) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+.live-dot {
+  animation: live-pulse 2.4s var(--ease-out-expo) infinite;
+}
+
+[data-theme='inspector'] .react-flow__node:has(.insp-tip-anchor:hover) {
+  z-index: 1000 !important;
+}
+
+.model-edge {
+  transition:
+    stroke 150ms var(--ease-out-expo),
+    fill 150ms var(--ease-out-expo);
+}
+
+[data-morph] .react-flow__node {
+  transition:
+    transform var(--model-move) var(--model-curve),
+    width var(--model-move) var(--model-curve),
+    height var(--model-move) var(--model-curve);
+}
+
+[data-morph] .react-flow__node > div {
+  overflow: hidden;
+}
+
+.edge-enter {
+  animation: node-fade-in 180ms ease-out var(--model-move) backwards;
+}
+
+.edge-exit {
+  pointer-events: none;
+  animation: node-fade-out 120ms ease-in forwards;
+}
+
+.node-enter {
+  animation: node-fade-in 180ms ease-out calc(var(--model-move) * 0.5) backwards;
+}
+
+.node-exit {
+  pointer-events: none;
+  animation: node-fade-out 120ms ease-in forwards;
+}
+
+@keyframes node-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes node-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes arrow-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+.edge-draw {
+  animation: arrow-draw 250ms var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill {
+    transition: none;
+  }
+
+  .swap-in,
+  .edge-draw,
+  .live-dot,
+  .node-enter,
+  .edge-enter {
+    animation: none;
+  }
+
+  .node-exit,
+  .edge-exit {
+    display: none;
+  }
+}

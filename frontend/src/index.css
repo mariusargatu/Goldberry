@@ -1,0 +1,146 @@
+@import 'tailwindcss';
+@import './design-system/tokens.css';
+@import './design-system/inspector-theme.css';
+
+/*
+ * Adding to the bag. The header bag's count grows for a moment, or pops in
+ * when the bag was empty; when a piece flies there (fly-to-bag.ts) it waits
+ * and changes as the piece lands (AppLayout.tsx).
+ * The Add button rings out in gold and a gold glint crosses it while its label
+ * rolls up to "Added to bag" and the check pops in (AddToBag.tsx). The button
+ * keeps its black, never tinted gold: fading gold into black would pass
+ * through brown.
+ */
+@theme {
+  --animate-bag-bump: bag-bump 0.4s ease-out;
+  --animate-bag-land: bag-land 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-added-shine:
+    added-ring 0.6s ease-out, added-glint 0.6s ease-in-out 0.1s;
+  --animate-label-out: label-out 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+  --animate-label-in: label-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.08s
+    backwards;
+  --animate-check-pop: check-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.22s
+    backwards;
+
+  @keyframes bag-bump {
+    40% {
+      transform: scale(1.5);
+    }
+  }
+
+  @keyframes bag-land {
+    from {
+      transform: scale(0);
+    }
+    60% {
+      transform: scale(1.35);
+    }
+  }
+
+  @keyframes added-ring {
+    /*
+     * Black even under the pointer, then eased to whatever the link would
+     * be (the hover grey, for a mouse): the glint reads muddy on grey, and
+     * the new link would flash from black to grey as it took the hover.
+     */
+    from,
+    60% {
+      background-color: var(--color-primary);
+    }
+    from {
+      box-shadow: 0 0 0 0
+        color-mix(in srgb, var(--color-secondary-container) 80%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 14px transparent;
+    }
+  }
+
+  @keyframes added-glint {
+    from,
+    to {
+      background-image: linear-gradient(
+        105deg,
+        transparent 44%,
+        color-mix(in srgb, var(--color-secondary-container) 60%, transparent),
+        transparent 56%
+      );
+      background-repeat: no-repeat;
+      background-size: 300% 100%;
+    }
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: 0 0;
+    }
+  }
+
+  @keyframes label-out {
+    to {
+      opacity: 0;
+      filter: blur(2px);
+      transform: translateY(-100%);
+    }
+  }
+
+  @keyframes label-in {
+    from {
+      opacity: 0;
+      filter: blur(2px);
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes check-pop {
+    from {
+      transform: scale(0) rotate(-60deg);
+    }
+    60% {
+      transform: scale(1.3) rotate(6deg);
+    }
+  }
+}
+
+/*
+ * Keep the whole page, footer included, clear of the flow inspector: above
+ * it as a drawer along the bottom, beside it as a sidebar on the right (the
+ * shop narrows; its fixed header stops at the sidebar too, AppLayout). The
+ * variables exist only while the inspector is mounted (FlowInspector). At
+ * the top, the fixed h-20 (5rem) header: whatever scrolls into view, like a
+ * focused field, stops below it, with a little air.
+ */
+html {
+  scroll-padding-top: 6rem;
+  scroll-padding-bottom: var(--flow-inspector-height, 0px);
+}
+
+body {
+  padding-bottom: var(--flow-inspector-height, 0px);
+  padding-right: var(--flow-inspector-width, 0px);
+}
+
+/*
+ * One keyboard focus ring for the whole storefront, links included. The
+ * inspector drawer has its own dark theme and styles its own focus.
+ * Layered as base so a utility (e.g. outline-offset-4) can still adjust it.
+ */
+@layer base {
+  :focus-visible:not([data-theme='inspector'] *) {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+/*
+ * Storefront motion (hover zooms, skeleton pulses) stops for people who ask
+ * for less. The inspector handles its own motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :not([data-theme='inspector'], [data-theme='inspector'] *) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

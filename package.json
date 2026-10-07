@@ -1,0 +1,12 @@
+{
+  "name": "goldberry",
+  "private": true,
+  "description": "A model-based testing tool (XState, Playwright page objects, Bombadil) and Goldberry, the shop it tests",
+  "license": "MIT",
+  "packageManager": "pnpm@10.27.0",
+  "engines": { "node": ">=22.22.0" },
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "format": "pnpm -r format"
+  }
+}

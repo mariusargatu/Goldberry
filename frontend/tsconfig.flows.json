@@ -1,0 +1,12 @@
+{
+  // src/flows must stay importable from Node (the external testing tool runs
+  // the machines and the analysis there): no DOM, no Vite types. `tsc -b`
+  // fails if the flows reach for a browser API.
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.flows.tsbuildinfo",
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["src/flows", "flows-host.d.ts"]
+}
