@@ -6,6 +6,7 @@
   "packageManager": "pnpm@10.27.0",
   "engines": { "node": ">=22.22.0" },
   "scripts": {
+    "test:regression": "pnpm --filter goldberry-testing test:regression",
     "typecheck": "pnpm -r typecheck",
     "format": "pnpm -r format"
   }

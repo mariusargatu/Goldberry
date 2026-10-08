@@ -1,0 +1,27 @@
+{
+  "name": "goldberry-testing",
+  "description": "The testing tool: an engine (core), the shared page objects (pages), the Goldberry model-based suite (mbt) and Bombadil exploration (bombadil)",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "test:regression": "playwright test --project=regression",
+    "explore": "playwright test --project=exploration",
+    "demo": "GOLDBERRY_INSPECTOR=on EXPLORE_TIME_LIMIT=60s playwright test --project=exploration --workers=1",
+    "demo:record": "GOLDBERRY_INSPECTOR=on DEMO_VIDEO=on EXPLORE_TIME_LIMIT=45s playwright test --project=exploration --workers=1 --output=test-results/demo",
+    "tally": "node bombadil/tally.ts",
+    "typecheck": "tsc",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@antithesishq/bombadil": "0.7.8",
+    "@playwright/test": "1.63.0",
+    "@types/node": "^24.13.3",
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.2",
+    "xstate": "5.33.2"
+  }
+}
