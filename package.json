@@ -7,6 +7,9 @@
   "engines": { "node": ">=22.22.0" },
   "scripts": {
     "test:regression": "pnpm --filter goldberry-testing test:regression",
+    "explore": "pnpm --filter goldberry-testing explore",
+    "demo": "pnpm --filter goldberry-testing demo",
+    "tally": "pnpm --filter goldberry-testing tally",
     "typecheck": "pnpm -r typecheck",
     "format": "pnpm -r format"
   }
